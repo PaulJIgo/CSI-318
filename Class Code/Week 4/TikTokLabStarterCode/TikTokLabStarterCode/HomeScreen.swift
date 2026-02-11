@@ -15,6 +15,7 @@ class HomeScreen: UIViewController {
     var userNameField = UITextField()
     var passwordField = UITextField()
     var loginButton = UIButton()
+    var navigationDelegate: NavigationDelegate?
     
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -78,7 +79,7 @@ class HomeScreen: UIViewController {
     
     @objc 
     func loginButtonTapped() {
-        // Set up a protocol to navigate to the "Videos Screen"
+        navigationDelegate?.loginTapped()
     }
     
 }
