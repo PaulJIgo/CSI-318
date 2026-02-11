@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>flags</key>
+	<array>
+		<dict>
+			<key>name</key>
+			<string>USA</string>
+			<key>continent</key>
+			<string>North America</string>
+			<key>flag</key>
+			<string>🇺🇸</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>China</string>
+			<key>continent</key>
+			<string>Asia</string>
+			<key>flag</key>
+			<string>🇨🇳</string>
+		</dict>
+		<dict>
+			<key>name</key>
+			<string>France</string>
+			<key>continent</key>
+			<string>Europe</string>
+			<key>flag</key>
+			<string>🇫🇷</string>
+		</dict>
+	</array>
+</dict>
+</plist>
