@@ -35,23 +35,26 @@ class ViewController: UIViewController {
     
     @objc
     func tappedButton() {
+        
+        // Create our alert Controller
         let alertController = UIAlertController(title: "Tapped!", message: "You tapped the button! Now you are soft locked", preferredStyle: .actionSheet)
         
+        // Add a source view for the action sheet, if we don't add this it'll be an alert
         alertController.popoverPresentationController?.sourceView = button
         
+        // Add a default action with a handler
         alertController.addAction(UIAlertAction(title: "Default", style: .default, handler: {
             self.button.setTitle($0.title, for: .normal)
-        }
-                                               
-                                               ))
+        }))
+        
+        // Add an action with cancel style
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         
+        // Add a destructive alert with a handler that accesses self
         alertController.addAction(UIAlertAction(title: "Delete all your data on your phone", style: .destructive, handler: { alertAction in 
             self.button.setTitle(alertAction.title, for: .normal)
         }))
-        
-        
-        
+        // present our alert to the user
         present(alertController, animated: true)
         
     }
