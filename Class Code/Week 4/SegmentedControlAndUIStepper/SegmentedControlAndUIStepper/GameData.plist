@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>countryData</key>
+	<array>
+		<dict>
+			<key>population</key>
+			<integer>21000000</integer>
+			<key>name</key>
+			<string>kazakhstan</string>
+			<key>flagImage</key>
+			<string>🇰🇿</string>
+		</dict>
+		<dict>
+			<key>population</key>
+			<integer>350000000</integer>
+			<key>name</key>
+			<string>USA</string>
+			<key>flagImage</key>
+			<string>🇺🇸</string>
+		</dict>
+		<dict>
+			<key>population</key>
+			<integer>3000000</integer>
+			<key>name</key>
+			<string>Bosnia</string>
+			<key>flagImage</key>
+			<string>🇧🇦</string>
+		</dict>
+	</array>
+</dict>
+</plist>

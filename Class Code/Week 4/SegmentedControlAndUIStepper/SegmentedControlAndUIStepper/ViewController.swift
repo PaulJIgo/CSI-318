@@ -40,61 +40,44 @@ class ViewController: UIViewController {
             make.centerX.equalToSuperview()
         }
         
-        setupSegmentedControl()
-        setupStepper()
-    }
-    
-    func setupStepper() {
-        // Add target for valueChanged
-        stepper.addTarget(self, action: #selector(stepperValueChanged), for: .valueChanged)
+        let countryInfos = getFlagData()
         
-        // You can overwrite the minimum and maximum values
-        stepper.maximumValue = 10.0
-        stepper.minimumValue = 1.0
-        
-        // Can also increase the step amount
-        stepper.stepValue = 2.0
-        
-        // Allows the user to press and hold to increase
-        stepper.autorepeat = true
-        
-        // Setup stepperLabel 
-        stepperLabel.textAlignment = .center
-        stepperLabel.text = String(stepper.value)
-
-    }
-    
-    @objc 
-    func stepperValueChanged() {
-        stepperLabel.text = String(stepper.value)
-    }
-    
-    func setupSegmentedControl() {
-        // Adding Segments to our segmented control
-        segmentedControl.insertSegment(withTitle: "First Segment", at: 0, animated: true)
-        segmentedControl.insertSegment(with: UIImage(systemName: "flag"), at: 1, animated: true)
-        
-        // Insert a Segment with an Action
-        segmentedControl.insertSegment(action: UIAction(title: "Action!", handler: { _ in
-            print("Action")
-        }), at: 2, animated: true)
-        
-        
-        segmentedControl.addTarget(self, action: #selector(segmentedControlChanged), for: .valueChanged)
-    }
-    
-    @objc 
-    func segmentedControlChanged() {
-        print(segmentedControl.selectedSegmentIndex)
-        
-        if segmentedControl.selectedSegmentIndex == 0 {
-            print("First Segment")
-        } else if segmentedControl.selectedSegmentIndex == 1 {
-            print("Flag")
-        } else {
-            print("Action Changed!!")
+        for countryInfo in countryInfos {
+            print(countryInfo.name)
+            print(countryInfo.flagImage)
+            print(countryInfo.population)
         }
+        
+    }
+    
+    func getFlagData() -> [CountryInfo] {
+        if let url = Bundle.main.url(forResource: "GameData", withExtension: "plist") {
+            do {
+                let data = try! Data(contentsOf: url)
+                let decoder = PropertyListDecoder()
+                
+                let flagData = try decoder.decode(FlagData.self, from: data)
+                return flagData.countryData
+                
+                
+                
+            } catch { 
+                return []
+            }
+        }
+        return []
     }
 
+}
+
+
+struct FlagData: Codable {
+    var countryData: [CountryInfo]
+}
+
+struct CountryInfo : Codable {
+    var flagImage: String
+    var name: String
+    var population: Int
 }
 
