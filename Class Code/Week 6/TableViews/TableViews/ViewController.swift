@@ -7,10 +7,10 @@
 
 import UIKit
 import SnapKit
+import MapKit
 
-class ViewController: UIViewController {
+class ViewController: UITableViewController {
 
-    var tableView = UITableView() 
     var contactsViewModel = ContactsViewModel()
     var button = UIButton()
     
@@ -19,15 +19,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        
-        
-        view.addSubview(tableView)
+
         
         createButton()
-        tableView.snp.makeConstraints {
-            $0.top.equalTo(button.snp.bottom)
-            $0.left.right.bottom.equalToSuperview()
-        }
         // Set the delegate method in case we want to override certain functions
         tableView.delegate = self
         
@@ -36,6 +30,11 @@ class ViewController: UIViewController {
         
         // Tell the tableView what type of cells it should expect
         tableView.register(TableViewCell.self, forCellReuseIdentifier: "TableViewCellReuseIdentifier")
+        tableView.register(HeaderViewForTableView.self, forHeaderFooterViewReuseIdentifier: "HeaderViewForTableView")
+        
+        tableView.dragInteractionEnabled = true
+        
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     func createButton() {
@@ -58,36 +57,60 @@ class ViewController: UIViewController {
     
     @objc
     func buttonTapped() {
-        contactsViewModel.addBlankContact()
         tableView.reloadData()
     }
     
 
 }
 
-extension ViewController : UITableViewDelegate {
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        contactsViewModel.objects.remove(at: indexPath.row)
-        tableView.reloadData()
-    }
-}
 
-extension ViewController: UITableViewDataSource {
+extension ViewController {
     
     // The two functions below you MUST implement or your code wont compile
     
     // This function tells the tableview how many rows are in it
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        contactsViewModel.objects.count
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let vmSection = contactsViewModel.objects[section]
+        print(vmSection)
+        
+        return vmSection.count
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        let vm = contactsViewModel.objects[sourceIndexPath.section].remove(at: sourceIndexPath.row)
+        
+        contactsViewModel.objects[destinationIndexPath.section].insert(vm, at: destinationIndexPath.row)
+        tableView.reloadData()
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            var section = contactsViewModel.objects[indexPath.section]
+            section.remove(at: indexPath.row)
+            contactsViewModel.objects[indexPath.section] = section
+            contactsViewModel.saveContactOrder()
+            tableView.reloadData()
+            
+            
+            
+            
+        }
+        
     }
 
     // This function determines what type of cell will show up at each indexpath
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         // We want a dequeueReusableCell to save memory
         if let cell = tableView.dequeueReusableCell(withIdentifier: "TableViewCellReuseIdentifier") as? TableViewCell {
             // We can then use our viewModel to get our object
-            let vm = contactsViewModel.objects[indexPath.row]
+            
+            let section = contactsViewModel.objects[indexPath.section]
+            let vm = section[indexPath.row]
             
             // Once we get the object we can configure the cell
             cell.configure(vm: vm)
@@ -97,6 +120,54 @@ extension ViewController: UITableViewDataSource {
         } else {
             // If for some reason we fail, just return a blank cell
             return UITableViewCell()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        contactsViewModel.objects.count
+    }
+    
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        if section == 0 {
+//            return "The First people who volunteered"
+//        } else {
+//            return "The people I made volunteer"
+//        }
+//        
+//    }
+//    
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = HeaderViewForTableView()
+        if section == 0 {
+            headerView.configure(title: "Section is: " + String(section))
+        } else {
+            headerView.configure(title: "Bottom Section is: " + String(section))
+        }
+        
+        return headerView
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let headerView = HeaderViewForTableView()
+        headerView.backgroundColor = .red
+        if section == 0 {
+            headerView.configure(title: "Section is: " + String(section))
+        } else {
+            headerView.configure(title: "Bottom Section is: " + String(section))
+        }
+        
+        return headerView
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        if section == 0 {
+            return "Bottom of Section 0"
+        } else {
+            return "Bottom of Section 1"
         }
     }
     
